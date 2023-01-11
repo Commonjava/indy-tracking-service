@@ -1,6 +1,6 @@
 {
   "id": "quarkus",
-  "realm": "indyreposervice",
+  "realm": "indytrackingservice",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -533,14 +533,14 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/indyreposervice/account/",
+      "baseUrl": "/realms/indytrackingservice/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "/realms/indyreposervice/account/*"
+        "/realms/indytrackingservice/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -926,14 +926,14 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/indyreposervice/console/",
+      "baseUrl": "/admin/indytrackingservice/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "/admin/indyreposervice/console/*"
+        "/admin/indytrackingservice/console/*"
       ],
       "webOrigins": [
         "+"
