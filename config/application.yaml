@@ -29,7 +29,7 @@ quarkus:
       enable: false
   oidc:
     enabled: true
-    auth-server-url: "https://localhost:8543/realms/indyreposervice"
+    auth-server-url: "https://localhost:8543/realms/indytrackingservice"
     client-id: indy
     credentials:
       secret: secret
@@ -130,5 +130,5 @@ cassandra:
   port: 9042
   user: cassandra
   pass: cassandra
-  keyspace: indyreposervice
+  keyspace: folo
   keyspaceReplicas: 1
