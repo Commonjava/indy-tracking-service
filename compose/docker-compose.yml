@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022-2023 Red Hat, Inc. (https://github.com/Commonjava/indy-tracking-service)
+# Copyright (C) 2011-2022 Red Hat, Inc. (https://github.com/Commonjava/indy-repository-service)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ services:
       - "HEAP_NEWSIZE=128M"
     restart: always
     volumes:
-      - /tmp/cassandra:/var/lib/cassandra
+      - ./data/cassandra:/var/lib/cassandra
 
   zookeeper:
     image: quay.io/strimzi/kafka:latest-kafka-3.1.0
@@ -66,4 +66,21 @@ services:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
     volumes:
-      - ./config/keycloak-keystore.jks:/etc/keycloak-keystore.jks
+      - ./config/keycloak/keycloak-keystore.jks:/etc/keycloak-keystore.jks
+
+  indy-repository-service:
+    image: quay.io/factory2/indy-repository-service:1.0.0
+    container_name: "indy-repository-service"
+    ports:
+      - "9000:8080"
+    environment:
+      - "MAX_HEAP_SIZE=256M"
+      - "HEAP_NEWSIZE=128M"
+    depends_on:
+      - cassandra
+      - kafka
+      - keycloak
+      # - otel-collector
+    restart: always
+    volumes:
+      - ./config/indy-repository-service/:/opt/indy-repository-service/config/
