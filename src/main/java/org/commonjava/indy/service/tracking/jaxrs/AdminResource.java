@@ -263,12 +263,18 @@ public class AdminResource
     @Path( "/report/export" )
     @GET
     @Produces( MEDIATYPE_APPLICATION_ZIP )
-    public Response exportReport()
+    public File exportReport()
     {
-        Response response;
+        try
+        {
+            return controller.renderReportZip();
+        }
+        catch ( IndyWorkflowException e )
+        {
+            responseHelper.throwError( e );
+        }
 
-        response = Response.ok().build();
-        return response;
+        return null;
     }
 
     @Operation( description = "Import records from a ZIP file." )

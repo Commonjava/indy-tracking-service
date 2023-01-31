@@ -1,6 +1,7 @@
 package org.commonjava.indy.service.tracking.controller;
 
 import org.commonjava.indy.service.tracking.Constants;
+import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuery;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
@@ -16,16 +17,27 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static org.commonjava.indy.service.tracking.util.TrackingUtils.zipTrackedContent;
+
 @ApplicationScoped
 public class AdminController
 {
+    public static final String FOLO_DIR = "folo";
+
+    public static final String FOLO_SEALED_ZIP = "folo-sealed.zip";
 
     private final Logger logger = LoggerFactory.getLogger( getClass() );
+
+    @Inject
+    private IndyTrackingConfiguration config;
 
     @Inject
     private CassandraTrackingQuery recordManager;
@@ -43,6 +55,28 @@ public class AdminController
     {
         TrackingKey tk = new TrackingKey( id );
         return constructContentDTO( recordManager.seal( tk ), baseUrl );
+    }
+
+    public File renderReportZip() throws IndyWorkflowException
+    {
+        Set<TrackedContent> sealed = recordManager.getSealed(); // only care about sealed records
+        try
+        {
+            File file = Paths.get( config.baseDir().getAbsolutePath(), FOLO_DIR, FOLO_SEALED_ZIP ).toFile();
+            if ( file.exists() )
+            {
+                file.delete();
+            }
+            file.getParentFile().mkdirs(); // make dirs if not exist
+
+            zipTrackedContent( file, sealed );
+
+            return file;
+        }
+        catch ( IOException e )
+        {
+            throw new IndyWorkflowException( "Failed to create zip file", e );
+        }
     }
 
     public TrackedContentDTO getRecord( final String id, String baseUrl ) throws IndyWorkflowException
