@@ -47,6 +47,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -283,6 +284,19 @@ public class AdminResource
     @PUT
     public Response importReport( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
     {
+        try
+        {
+            controller.importRecordZip( request.getInputStream() );
+        }
+        catch ( IndyWorkflowException e )
+        {
+            responseHelper.throwError( e );
+        }
+        catch ( IOException e )
+        {
+            responseHelper.throwError( new IndyWorkflowException( "IO error", e ) );
+        }
+
         return Response.created( uriInfo.getRequestUri() ).build();
     }
 

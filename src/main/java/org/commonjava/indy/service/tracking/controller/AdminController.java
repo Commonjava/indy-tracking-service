@@ -19,12 +19,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static org.commonjava.indy.service.tracking.util.TrackingUtils.readZipInputStreamAnd;
 import static org.commonjava.indy.service.tracking.util.TrackingUtils.zipTrackedContent;
 
 @ApplicationScoped
@@ -55,6 +57,19 @@ public class AdminController
     {
         TrackingKey tk = new TrackingKey( id );
         return constructContentDTO( recordManager.seal( tk ), baseUrl );
+    }
+
+    public void importRecordZip( InputStream stream ) throws IndyWorkflowException
+    {
+        try
+        {
+            int count = readZipInputStreamAnd( stream, ( record ) -> recordManager.addSealedRecord( record ) );
+            logger.debug( "Import records done, size: {}", count );
+        }
+        catch ( Exception e )
+        {
+            throw new IndyWorkflowException( "Failed to import zip file", e );
+        }
     }
 
     public File renderReportZip() throws IndyWorkflowException
