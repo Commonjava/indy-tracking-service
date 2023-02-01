@@ -59,6 +59,9 @@ indy_security:
 tracking:
   baseDir: "data"
 
+content-service-api/mp-rest/url: http://localhost
+content-service-api/mp-rest/scope: javax.inject.Singleton
+
 kafka:
   bootstrap:
     servers: "localhost:9092"

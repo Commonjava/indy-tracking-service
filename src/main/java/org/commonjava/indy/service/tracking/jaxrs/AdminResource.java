@@ -16,11 +16,14 @@
 package org.commonjava.indy.service.tracking.jaxrs;
 
 import org.commonjava.indy.service.tracking.Constants;
+import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
+import org.commonjava.indy.service.tracking.client.content.MaintenanceService;
 import org.commonjava.indy.service.tracking.controller.AdminController;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
+import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackingIdsDTO;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -29,6 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +72,10 @@ public class AdminResource
     public static final String MEDIATYPE_APPLICATION_ZIP = "application/zip";
 
     private final Logger logger = LoggerFactory.getLogger( getClass() );
+
+    @Inject
+    @RestClient
+    MaintenanceService maintenanceService;
 
     @Inject
     private AdminController controller;
@@ -307,9 +315,42 @@ public class AdminResource
     @POST
     @Consumes( APPLICATION_JSON )
     @Produces( APPLICATION_JSON )
-    public Response doDelete( @Context final UriInfo uriInfo, @Context final HttpServletRequest request )
+    public Response doDelete( @Context final UriInfo uriInfo, @Context final BatchDeleteRequest request )
     {
-        return Response.created( uriInfo.getRequestUri() ).build();
+        String trackingID = request.getTrackingID();
+
+        if ( trackingID == null || request.getStoreKey() == null )
+        {
+            Response.ResponseBuilder builder = Response.status( 400 );
+            return builder.build();
+        }
+
+        if ( request.getPaths() == null || request.getPaths().isEmpty() )
+        {
+            final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+            try
+            {
+                final TrackedContentDTO record = controller.getRecord( trackingID, baseUrl );
+                if ( record == null || record.getUploads().isEmpty() )
+                {
+                    Response.ResponseBuilder builder = Response.status( 400 );
+                    return builder.build();
+                }
+
+                Set<String> paths = new HashSet<>();
+                for ( TrackedContentEntryDTO entry : record.getUploads() )
+                {
+                    paths.add( entry.getPath() );
+                }
+                request.setPaths( paths );
+            }
+            catch ( IndyWorkflowException e )
+            {
+                responseHelper.throwError( e );
+            }
+        }
+
+        return maintenanceService.doDelete( request );
     }
 
     @Operation( description = "Import folo from ISPN cache to Cassandra." )
