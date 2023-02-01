@@ -93,13 +93,32 @@ public class AdminResource
     @Path( "/{id}/record/recalculate" )
     @GET
     public Response recalculateRecord(
-                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id )
+                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id,
+                    @Context final UriInfo uriInfo )
     {
         Response response;
+        try
+        {
+            final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();
+            final TrackedContentDTO report = controller.recalculateRecord( id, baseUrl );
 
-        logger.info( "id is: {}", id );
+            if ( report == null )
+            {
+                response = Response.status( Response.Status.NOT_FOUND ).build();
+            }
+            else
+            {
+                response = responseHelper.formatOkResponseWithJsonEntity( report );
+            }
+        }
+        catch ( final IndyWorkflowException e )
+        {
+            logger.error( String.format( "Failed to serialize tracking report for: %s. Reason: %s", id,
+                                         e.getMessage() ), e );
 
-        response = Response.ok().build();
+            response = responseHelper.formatResponse( e );
+        }
+
         return response;
     }
 
