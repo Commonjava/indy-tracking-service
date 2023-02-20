@@ -107,9 +107,6 @@ indy_security:
 
 tracking:
   baseDir: "data"
-  track:
-    group:
-      content: true
 
 content-service-api/mp-rest/url: http://localhost
 content-service-api/mp-rest/scope: javax.inject.Singleton
@@ -123,17 +120,12 @@ mp:
     emitter:
       # the default buffer size for emitter's OnOverflow buffer strategy of back-pressure control
       default-buffer-size: 1024
-    incoming:
-      file-event-in:
-        connector: smallrye-kafka
-        topic: file-event
+    outgoing:
+      store-event:
+        connector: "smallrye-kafka"
+        topics: "store-event"
         value:
-          deserializer: org.commonjava.event.file.FileEventDeserializer
-      promote-event-in:
-        connector: smallrye-kafka
-        topic: promote-complete
-        value:
-          deserializer: org.commonjava.indy.service.tracking.handler.PathsPromoteCompleteEventDeserializer
+          serializer: "io.quarkus.kafka.client.serialization.ObjectMapperSerializer"
 
 cassandra:
   enabled: true
