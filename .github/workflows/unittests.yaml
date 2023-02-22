@@ -1,7 +1,7 @@
 name: Unittests
 
 on:
-  pull_request_target:
+  pull_request:
 
   push:
     branches:
@@ -28,5 +28,30 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: 🚀 Coveralls Coverage Report Submission for JDK ${{ matrix.jdk-version }}
-        run:  mvn clean test jacoco:report coveralls:report -DrepoToken=${{ secrets.COVERALL_REPO_SECRET }}
+      - name: 🚀 Generate Coverage Report for JDK ${{ matrix.jdk-version }}
+        run:  mvn clean test jacoco:report
+
+      - name: Run coveralls-python for JDK ${{ matrix.jdk-version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: jdk-${{ matrix.jdk-version }}
+          COVERALLS_PARALLEL: true
+        run: |
+          pip3 install --upgrade pip
+          pip3 install --upgrade setuptools
+          pip3 install --upgrade coveralls
+          /home/runner/.local/bin/coveralls --service=github --merge=./target/jacoco-report/jacoco.xml
+
+  coveralls-finish:
+    name: Finish coveralls-python
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Finished
+        run: |
+          pip3 install --upgrade pip
+          pip3 install --upgrade setuptools
+          pip3 install --upgrade coveralls
+          /home/runner/.local/bin/coveralls --finish --service=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
