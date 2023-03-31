@@ -118,4 +118,4 @@ cassandra:
           connector: smallrye-kafka
           topic: promote-complete
           value:
-            deserializer: org.commonjava.service.metadata.handler.PathsPromoteCompleteEventDeserializer
+            deserializer: org.commonjava.indy.service.tracking.handler.PathsPromoteCompleteEventDeserializer
