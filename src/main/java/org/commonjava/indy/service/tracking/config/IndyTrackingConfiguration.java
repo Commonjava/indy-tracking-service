@@ -17,6 +17,7 @@ package org.commonjava.indy.service.tracking.config;
 
 import io.quarkus.runtime.Startup;
 import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithName;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,5 +32,6 @@ public interface IndyTrackingConfiguration
     File baseDir();
 
     @WithName( "track.group.content" )
+    @WithDefault( "true" )
     Boolean trackGroupContent();
 }
