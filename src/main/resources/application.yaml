@@ -53,8 +53,8 @@ quarkus:
     always-include: true
 
 indy_security:
-  enabled: false
-  security_bindings_yaml: config/security-bindings.yaml
+  enabled: true
+  security_bindings_yaml: security-bindings.yaml
 
 tracking:
   baseDir: "data"
