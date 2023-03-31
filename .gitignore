@@ -1,3 +1,6 @@
+config/
+log/
+data/
 #Maven
 target/
 pom.xml.tag
