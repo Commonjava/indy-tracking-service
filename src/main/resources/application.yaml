@@ -5,10 +5,10 @@ quarkus:
     read-timeout: 30m
     limits:
       max-body-size: 500M
-
   package:
-    uber-jar: true
-
+    type: uber-jar
+  application:
+    name: "indy-tracking-service"
   # Logging (disable console on prod)
   log:
     level: INFO
