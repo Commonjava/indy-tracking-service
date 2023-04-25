@@ -26,6 +26,7 @@ import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuer
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
 import org.commonjava.indy.service.tracking.jaxrs.DTOStreamingOutput;
+import org.commonjava.indy.service.tracking.model.StoreKey;
 import org.commonjava.indy.service.tracking.model.TrackedContent;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
@@ -381,7 +382,7 @@ public class AdminController
         }
 
         String trackingID = deleteRequest.getTrackingID();
-        final String givenStore = deleteRequest.getStoreKey().toString();
+        final StoreKey givenStore = deleteRequest.getStoreKey();
         final AtomicBoolean isOk = new AtomicBoolean(false);
         try
         {
@@ -396,7 +397,7 @@ public class AdminController
             if ( resultMap != null )
             {
                 resultMap.forEach( (k,v) -> {
-                    if (v.getRequest().getTargetStore().equals(givenStore))
+                    if (v.getRequest().getTarget().equals(givenStore))
                     {
                         isOk.set(true); // set true if any match found
                     }

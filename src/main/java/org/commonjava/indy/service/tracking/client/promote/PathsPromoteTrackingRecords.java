@@ -15,6 +15,8 @@
  */
 package org.commonjava.indy.service.tracking.client.promote;
 
+import org.commonjava.indy.service.tracking.model.StoreKey;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -64,24 +66,24 @@ public class PathsPromoteTrackingRecords
     }
 
     public static class PathsPromoteRequest {
-        private String sourceStore;
+        private StoreKey source;
 
-        private String targetStore;
+        private StoreKey target;
 
-        public String getSourceStore() {
-            return sourceStore;
+        public StoreKey getSource() {
+            return source;
         }
 
-        public void setSourceStore(String sourceStore) {
-            this.sourceStore = sourceStore;
+        public void setSource(StoreKey source) {
+            this.source = source;
         }
 
-        public String getTargetStore() {
-            return targetStore;
+        public StoreKey getTarget() {
+            return target;
         }
 
-        public void setTargetStore(String targetStore) {
-            this.targetStore = targetStore;
+        public void setTarget(StoreKey target) {
+            this.target = target;
         }
     }
 }

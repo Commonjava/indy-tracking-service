@@ -100,7 +100,6 @@ cassandra:
     track:
       group:
         content: true
-    deletionAdditionalGuardCheck: true
 
   kafka:
     bootstrap:
@@ -122,3 +121,15 @@ cassandra:
           topic: promote-complete
           value:
             deserializer: org.commonjava.indy.service.tracking.handler.PathsPromoteCompleteEventDeserializer
+
+"%test":
+  quarkus:
+    log:
+      level: INFO
+      category:
+        "org.commonjava.indy.service.tracking":
+          level: DEBUG
+      console:
+        enable: true
+  tracking:
+    deletionAdditionalGuardCheck: true
