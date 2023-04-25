@@ -34,4 +34,9 @@ public interface IndyTrackingConfiguration
     @WithName( "track.group.content" )
     @WithDefault( "true" )
     Boolean trackGroupContent();
+
+    @WithName( "deletionAdditionalGuardCheck" )
+    @WithDefault( "false" )
+    Boolean deletionAdditionalGuardCheck();
+
 }

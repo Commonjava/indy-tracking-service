@@ -17,7 +17,10 @@ package org.commonjava.indy.service.tracking.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.commonjava.indy.service.tracking.Constants;
+import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
 import org.commonjava.indy.service.tracking.client.content.ContentService;
+import org.commonjava.indy.service.tracking.client.promote.PathsPromoteTrackingRecords;
+import org.commonjava.indy.service.tracking.client.promote.PromoteService;
 import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuery;
 import org.commonjava.indy.service.tracking.exception.ContentException;
@@ -46,6 +49,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -66,6 +70,10 @@ public class AdminController
     @Inject
     @RestClient
     ContentService contentService;
+
+    @Inject
+    @RestClient
+    PromoteService promoteService;
 
     @Inject
     private IndyTrackingConfiguration config;
@@ -360,4 +368,52 @@ public class AdminController
         return isRecorded;
     }
 
+    /**
+     * Additional check for batch deletion. It retrieves the promotion record by the trackingID
+     * to find the target store associated with the promotion. If the target store does not match given store,
+     * return failed delete validation result.
+     */
+    public boolean deletionAdditionalGuardCheck(BatchDeleteRequest deleteRequest )
+    {
+        if ( !config.deletionAdditionalGuardCheck() )
+        {
+            return true; // as passed if guard check is not enabled
+        }
+
+        String trackingID = deleteRequest.getTrackingID();
+        final String givenStore = deleteRequest.getStoreKey().toString();
+        final AtomicBoolean isOk = new AtomicBoolean(false);
+        try
+        {
+            Response resp = promoteService.getPromoteRecords( trackingID );
+            if (!isSuccess(resp))
+            {
+                logger.warn( "Deletion guard check failed, status:" + resp.getStatus() );
+                return false;
+            }
+            PathsPromoteTrackingRecords promoteTrackingRecords = resp.readEntity(PathsPromoteTrackingRecords.class);
+            Map<String, PathsPromoteTrackingRecords.PathsPromoteResult> resultMap = promoteTrackingRecords.getResultMap();
+            if ( resultMap != null )
+            {
+                resultMap.forEach( (k,v) -> {
+                    if (v.getRequest().getTargetStore().equals(givenStore))
+                    {
+                        isOk.set(true); // set true if any match found
+                    }
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            logger.warn("Deletion guard check failed", e);
+            return false;
+        }
+        logger.info("Deletion guard check, trackingID: {}, passed: {}", trackingID, isOk.get());
+        return isOk.get();
+    }
+
+    private boolean isSuccess(Response resp) {
+        return Response.Status.fromStatusCode(resp.getStatus()).getFamily()
+                == Response.Status.Family.SUCCESSFUL;
+    }
 }

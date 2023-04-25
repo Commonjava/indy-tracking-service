@@ -357,6 +357,12 @@ public class AdminResource
             return builder.build();
         }
 
+        if ( !controller.deletionAdditionalGuardCheck(request) )
+        {
+            Response.ResponseBuilder builder = Response.status( 400 );
+            return builder.build();
+        }
+
         if ( request.getPaths() == null || request.getPaths().isEmpty() )
         {
             final String baseUrl = uriInfo.getBaseUriBuilder().path( "api" ).build().toString();

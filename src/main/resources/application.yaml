@@ -61,6 +61,8 @@ tracking:
 
 content-service-api/mp-rest/url: http://localhost
 content-service-api/mp-rest/scope: javax.inject.Singleton
+promote-service-api/mp-rest/url: http://localhost
+promote-service-api/mp-rest/scope: javax.inject.Singleton
 
 kafka:
   bootstrap:
@@ -98,6 +100,7 @@ cassandra:
     track:
       group:
         content: true
+    deletionAdditionalGuardCheck: true
 
   kafka:
     bootstrap:
