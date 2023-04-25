@@ -373,7 +373,7 @@ public class AdminController
      * to find the target store associated with the promotion. If the target store does not match given store,
      * return failed delete validation result.
      */
-    public boolean deletionAdditionalGuardCheck(BatchDeleteRequest deleteRequest )
+    public boolean deletionAdditionalGuardCheck( BatchDeleteRequest deleteRequest )
     {
         if ( !config.deletionAdditionalGuardCheck() )
         {

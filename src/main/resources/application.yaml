@@ -13,7 +13,7 @@ quarkus:
   log:
     level: INFO
     category:
-      "org.commonjava.service.tracking":
+      "org.commonjava.indy.service.tracking":
         level: DEBUG
     console:
       level: DEBUG
@@ -84,7 +84,7 @@ cassandra:
     log:
       level: INFO
       category:
-        "org.commonjava.service.tracking":
+        "org.commonjava.indy.service.tracking":
           level: TRACE
       console:
         enable: true

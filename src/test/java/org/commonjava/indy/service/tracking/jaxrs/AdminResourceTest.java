@@ -254,6 +254,7 @@ public class AdminResourceTest
         trackedContentDTO.setUploads( entries );
         trackedContentDTO.setKey( new TrackingKey( TRACKING_ID ) );
 
+        when( adminController.deletionAdditionalGuardCheck( any() ) ).thenReturn( true );
         when( adminController.getRecord( anyString(), anyString() ) ).thenReturn( trackedContentDTO, null );
         given().header( "Content-type", "application/json" )
                .and()
@@ -283,6 +284,7 @@ public class AdminResourceTest
         entries.add( entry );
         trackedContentDTO.setUploads( entries );
         trackedContentDTO.setKey( new TrackingKey( TRACKING_ID ) );
+        when( adminController.deletionAdditionalGuardCheck( any() ) ).thenReturn( true );
         when( adminController.getRecord( anyString(), anyString() ) ).thenReturn( null );
         given().header( "Content-type", "application/json" )
                .and()
