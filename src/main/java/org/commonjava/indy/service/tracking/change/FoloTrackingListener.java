@@ -75,7 +75,7 @@ public class FoloTrackingListener
 
         String trackingId = event.getSessionId();
 
-        final TrackingKey trackingKey = !Objects.equals( trackingId, "" ) ? new TrackingKey( trackingId ) : null;
+        final TrackingKey trackingKey = StringUtils.isNotBlank( trackingId ) ? new TrackingKey( trackingId ) : null;
         if ( trackingKey == null )
         {
             logger.trace( "No tracking key for access to: {}", event.getTargetPath() );
