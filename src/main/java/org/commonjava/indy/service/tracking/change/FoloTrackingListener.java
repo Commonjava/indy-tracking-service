@@ -148,7 +148,7 @@ public class FoloTrackingListener
 
             TrackedContentEntry entry =
                             new TrackedContentEntry( trackingKey, storeKey, accessChannel, event.getSourceLocation(),
-                                                     event.getTargetPath(), DOWNLOAD, event.getSize(), event.getMd5(),
+                                                     event.getTargetPath(), UPLOAD, event.getSize(), event.getMd5(),
                                                      event.getSha1(), event.getChecksum() );
 
             recordManager.recordArtifact( entry );
