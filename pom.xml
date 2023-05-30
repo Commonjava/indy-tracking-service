@@ -47,6 +47,11 @@
         </dependency>
         <dependency>
             <groupId>org.commonjava.indy.service</groupId>
+            <artifactId>indy-event-model-serializer</artifactId>
+            <version>${eventmodel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.commonjava.indy.service</groupId>
             <artifactId>indy-security</artifactId>
             <version>${indysecurity.verison}</version>
         </dependency>
