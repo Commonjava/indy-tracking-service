@@ -56,7 +56,7 @@ public class FoloTrackingListener
 
     public void handleFileAccessEvent( final FileEvent event )
     {
-        logger.trace( "FILE ACCESS: {}", event );
+        logger.info( "FILE ACCESS: {}", event );
 
         EventMetadata metadata = event.getEventMetadata();
 
@@ -116,7 +116,7 @@ public class FoloTrackingListener
 
     public void handleFileStorageEvent( final FileEvent event )
     {
-        logger.trace( "FILE STORAGE: {}", event );
+        logger.info( "FILE STORAGE: {}", event );
 
         EventMetadata metadata = event.getEventMetadata();
 
