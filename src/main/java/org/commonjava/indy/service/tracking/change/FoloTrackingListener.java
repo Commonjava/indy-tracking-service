@@ -30,14 +30,12 @@ import org.commonjava.indy.service.tracking.model.StoreKey;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Objects;
-import java.util.concurrent.CompletionStage;
 
 import static org.commonjava.indy.service.tracking.Constants.ORIGIN_PATH;
 import static org.commonjava.indy.service.tracking.model.StoreEffect.DOWNLOAD;
@@ -164,10 +162,8 @@ public class FoloTrackingListener
 
     @Blocking
     @Incoming( "file-event-in" )
-    public CompletionStage<Void> handleFileEvent( Message<FileEvent> message )
+    public void handleFileEvent( FileEvent event )
     {
-        FileEvent event = message.getPayload();
-        logger.info("Got an event: {}", event);
         if ( event.getEventType().equals( FileEventType.ACCESS ) )
         {
             handleFileAccessEvent( event );
@@ -176,7 +172,7 @@ public class FoloTrackingListener
         {
             handleFileStorageEvent( event );
         }
-        return message.ack();
+
     }
 
 }

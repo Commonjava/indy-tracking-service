@@ -25,14 +25,12 @@ import org.commonjava.indy.service.tracking.model.TrackedContent;
 import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Set;
-import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
 public class FoloTrackingAdjustListener
@@ -48,16 +46,15 @@ public class FoloTrackingAdjustListener
 
     @Blocking
     @Incoming( "promote-event-in" )
-    public CompletionStage<Void> onPromoteComplete( Message<PathsPromoteCompleteEvent> message )
+    public void onPromoteComplete( final PathsPromoteCompleteEvent event )
     {
-        PathsPromoteCompleteEvent event = message.getPayload();
-        logger.info( "Promote COMPLETE: {}", event );
+        logger.trace( "Promote COMPLETE: {}", event );
 
         Set<String> paths = event.getCompletedPaths();
         if ( paths.isEmpty() )
         {
             logger.trace( "No completedPaths, skip adjust" );
-            return message.ack();
+            return;
         }
 
         StoreKey source = StoreKey.fromString( event.getSourceStore() );
@@ -67,7 +64,7 @@ public class FoloTrackingAdjustListener
         if ( trackingKey == null )
         {
             logger.trace( "No tracking key found to: {}", source );
-            return message.ack();
+            return;
         }
 
         // Get the sealed record, client MUST seal the record before promote
@@ -75,13 +72,12 @@ public class FoloTrackingAdjustListener
         if ( trackedContent == null )
         {
             logger.trace( "No sealed record found, trackingKey: {}", trackingKey );
-            return message.ack();
+            return;
         }
 
         adjustTrackedContent( trackedContent, target );
 
         recordManager.replaceTrackingRecord( trackedContent );
-        return message.ack();
     }
 
     private void adjustTrackedContent( TrackedContent trackedContent, StoreKey target )
