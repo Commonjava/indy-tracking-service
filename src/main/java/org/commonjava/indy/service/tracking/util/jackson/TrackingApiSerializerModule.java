@@ -16,9 +16,6 @@
 package org.commonjava.indy.service.tracking.util.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.commonjava.event.store.EventStoreKey;
-import org.commonjava.event.store.jackson.EventStoreKeyDeserializer;
-import org.commonjava.event.store.jackson.EventStoreKeySerializer;
 import org.commonjava.indy.service.tracking.model.StoreKey;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -32,11 +29,9 @@ public class TrackingApiSerializerModule
 
     public TrackingApiSerializerModule()
     {
-        super( "Indy Repository API" );
+        super( "Indy Tracking API" );
         addDeserializer( StoreKey.class, new StoreKeyDeserializer() );
         addSerializer( StoreKey.class, new StoreKeySerializer() );
-        addDeserializer( EventStoreKey.class, new EventStoreKeyDeserializer() );
-        addSerializer( EventStoreKey.class, new EventStoreKeySerializer() );
     }
 
     @Override
