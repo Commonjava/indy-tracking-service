@@ -389,6 +389,13 @@ public class AdminController
             Response resp = promoteService.getPromoteRecords( trackingID );
             if (!isSuccess(resp))
             {
+                if ( resp.getStatus() == Response.Status.NOT_FOUND.getStatusCode() )
+                {
+                    // Record not exists. It is common because the guide check can not cover old artifacts. Old
+                    // artifacts were promoted without tracking. We just print a log and allow it.
+                    logger.info("Promote tracking record not found but allow deletion, trackingID: {}", trackingID);
+                    return true;
+                }
                 logger.warn( "Deletion guard check failed, status:" + resp.getStatus() );
                 return false;
             }
