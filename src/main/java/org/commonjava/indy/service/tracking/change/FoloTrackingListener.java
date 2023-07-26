@@ -135,6 +135,13 @@ public class FoloTrackingListener
             return;
         }
         final AccessChannel accessChannel = AccessChannel.valueOf( (String) metadata.get( Constants.ACCESS_CHANNEL ) );
+
+        if ( AccessChannel.GENERIC_PROXY.equals( accessChannel ) )
+        {
+            logger.trace("Skipping tracking of storage for artifacts through proxy.");
+            return;
+        }
+
         String keyString = event.getStoreKey();
         if (StringUtils.isBlank( keyString )) {
             logger.trace( "NOT tracking content without StoreKey" );
