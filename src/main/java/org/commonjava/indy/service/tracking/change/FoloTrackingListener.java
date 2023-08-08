@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.commonjava.event.common.EventMetadata;
 import org.commonjava.event.file.FileEvent;
 import org.commonjava.event.file.FileEventType;
+import org.commonjava.event.file.TransferOperation;
 import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraTrackingQuery;
@@ -136,6 +137,12 @@ public class FoloTrackingListener
     public void handleFileStorageEvent( final FileEvent event ) throws IndyWorkflowException
     {
         logger.info( "FILE STORAGE: {}", event );
+
+        if ( TransferOperation.UPLOAD != event.getOperation() )
+        {
+            logger.trace( "Not a file upload from client; skipping tracking of storage" );
+            return;
+        }
 
         EventMetadata metadata = event.getEventMetadata();
 
