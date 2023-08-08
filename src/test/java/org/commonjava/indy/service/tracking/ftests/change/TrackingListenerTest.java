@@ -23,6 +23,7 @@ import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
 import org.commonjava.event.common.EventMetadata;
 import org.commonjava.event.file.FileEvent;
 import org.commonjava.event.file.FileEventType;
+import org.commonjava.event.file.TransferOperation;
 import org.commonjava.event.promote.PathsPromoteCompleteEvent;
 import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.data.cassandra.CassandraConfiguration;
@@ -130,6 +131,7 @@ public class TrackingListenerTest
     {
         InMemorySource<FileEvent> fileEvents = connector.source( "file-event-in" );
         FileEvent event = new FileEvent( FileEventType.STORAGE );
+        event.setOperation( TransferOperation.UPLOAD );
         EventMetadata metadata = new EventMetadata();
         metadata.set( Constants.ACCESS_CHANNEL, AccessChannel.NATIVE.toString() );
         event.setEventMetadata( metadata );
