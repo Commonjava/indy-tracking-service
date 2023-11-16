@@ -39,4 +39,7 @@ public interface IndyTrackingConfiguration
     @WithDefault( "false" )
     Boolean deletionAdditionalGuardCheck();
 
+    @WithName( "skipDeletionAdditionalGuardCheck" )
+    @WithDefault( "^temporary-.*" )
+    String skipDeletionAdditionalGuardCheck();
 }

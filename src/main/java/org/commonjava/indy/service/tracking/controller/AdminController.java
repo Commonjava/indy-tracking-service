@@ -376,9 +376,11 @@ public class AdminController
      */
     public boolean deletionAdditionalGuardCheck( BatchDeleteRequest deleteRequest )
     {
-        if ( !config.deletionAdditionalGuardCheck() )
+        if ( !config.deletionAdditionalGuardCheck() || deleteRequest.getStoreKey().getName()
+                .matches(config.skipDeletionAdditionalGuardCheck()))
         {
-            return true; // as passed if guard check is not enabled
+            logger.debug("Deletion additional check not enabled or skipped, store: {}", deleteRequest.getStoreKey());
+            return true;
         }
 
         String trackingID = deleteRequest.getTrackingID();
@@ -409,7 +411,7 @@ public class AdminController
             logger.warn("Deletion guard check failed", e);
             return false;
         }
-        logger.info("Deletion guard check, trackingID: {}, passed: {}", trackingID, isOk.get());
+        logger.info("Deletion guard check, trackingID: {}, store: {}, passed: {}", trackingID, deleteRequest.getStoreKey(), isOk.get());
         return isOk.get();
     }
 

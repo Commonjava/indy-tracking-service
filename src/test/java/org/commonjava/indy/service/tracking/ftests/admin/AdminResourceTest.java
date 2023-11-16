@@ -234,9 +234,22 @@ public class AdminResourceTest
     }
 
     @Test
-    public void testDoDeleteSuccess() throws IndyWorkflowException, JsonProcessingException
+    public void testDoDeleteSuccess() throws Exception
     {
         StoreKey storeKey = new StoreKey( "maven", StoreType.remote, "test" );
+        testDoDeleteInternal( storeKey );
+    }
+
+    @Test
+    public void testDoDeleteSkipGuardCheck() throws Exception
+    {
+        // By default, skip repos with name matching "^temporary-.*"
+        StoreKey storeKey = new StoreKey( "maven", StoreType.remote, "temporary-builds" );
+        testDoDeleteInternal( storeKey );
+    }
+
+    private void testDoDeleteInternal( StoreKey storeKey ) throws Exception
+    {
         BatchDeleteRequest batchDeleteRequest = new BatchDeleteRequest();
         batchDeleteRequest.setStoreKey( storeKey );
         batchDeleteRequest.setTrackingID( TRACKING_ID );
