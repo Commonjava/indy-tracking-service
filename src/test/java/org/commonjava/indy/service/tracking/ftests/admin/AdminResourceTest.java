@@ -137,6 +137,7 @@ public class AdminResourceTest
     @Test
     void testRecordArtifact()
     {
+        String trackingId = "tracking-id";
         TrackedContentEntry entry = new TrackedContentEntry();
         entry.setTrackingKey( new TrackingKey( "new-tracking-id" ) );
         StoreKey storeKey = new StoreKey( PackageTypeConstants.PKG_TYPE_MAVEN, StoreType.remote, "test" );
@@ -153,7 +154,7 @@ public class AdminResourceTest
         timestamps.add( 1234L );
         entry.setTimestamps( timestamps );
         entry.setPath( "/path/to/file" );
-        given().body( entry ).when().put( BASE_URL + "report/recordArtifact" ).then().statusCode( 201 );
+        given().body( entry ).when().get( BASE_URL + trackingId + "/artifactRecord/test/path/abc?type=group&packageType=maven&name=tea" ).then().statusCode( 200 );
     }
 
     @Test

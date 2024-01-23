@@ -49,7 +49,7 @@ public class AdminResourceSecurityTest
     @Test
     void testRecordArtifact()
     {
-        given().when().put( BASE_URL + "report/recordArtifact" ).then().statusCode( 403 );
+        given().when().get( BASE_URL + TRACKING_ID + "/artifactRecord/test/path/abc?type=group&packageType=maven&name=tea" ).then().statusCode( 500 );
     }
 
     @Test

@@ -15,7 +15,6 @@
  */
 package org.commonjava.indy.service.tracking.jaxrs;
 
-import org.apache.commons.lang3.StringUtils;
 import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
 import org.commonjava.indy.service.tracking.client.content.MaintenanceService;
@@ -23,6 +22,11 @@ import org.commonjava.indy.service.tracking.config.IndyTrackingConfiguration;
 import org.commonjava.indy.service.tracking.controller.AdminController;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
+import org.commonjava.indy.service.tracking.model.AccessChannel;
+import org.commonjava.indy.service.tracking.model.StoreEffect;
+import org.commonjava.indy.service.tracking.model.StoreKey;
+import org.commonjava.indy.service.tracking.model.StoreType;
+import org.commonjava.indy.service.tracking.model.TrackedContentEntry;
 import org.commonjava.indy.service.tracking.model.TrackingKey;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
@@ -49,6 +53,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -156,29 +161,38 @@ public class AdminResource
     @Path( "/{id}/record" )
     @PUT
     public Response initRecord(
-                    @Parameter( description = "User-assigned tracking session key", in = PATH, required = true ) @PathParam( "id" ) final String id,
-                    @Context final UriInfo uriInfo )
+            @Parameter( description = "User-assigned tracking session key", in = PATH, required = true )
+            @PathParam( "id" ) final String id, @Context final UriInfo uriInfo )
     {
         Response.ResponseBuilder rb = Response.created( uriInfo.getRequestUri() );
         return rb.build();
     }
 
-    @Operation( description = "Store record for single tracking content artifact" )
-    @APIResponse( responseCode = "201", description = "Store tracking entry" )
-    @Path( "/report/recordArtifact" )
-    @PUT
-    public Response recordArtifact( final @Context UriInfo uriInfo, final @Context HttpServletRequest request )
+    @Operation( description = "Get record for single tracking content artifact" )
+    @APIResponse( responseCode = "200", description = "Tracking record" )
+    @APIResponse( responseCode = "404", description = "No such tracking record" )
+    @Path( "/{id}/artifactRecord/{path: (.*)}" )
+    @GET
+    public Response recordArtifact(
+            @Parameter( description = "User-assigned tracking session key", in = PATH, required = true )
+            @PathParam( "id" ) final String id, @PathParam( "path" ) String path,
+            @QueryParam( "packageType" ) String packageType, @QueryParam( "type" ) String type,
+            @QueryParam( "name" ) String name, @QueryParam( "originalUrl" ) String originalUrl,
+            @QueryParam( "size" ) long size, @QueryParam( "md5" ) String md5, @QueryParam( "sha1" ) String sha1,
+            @QueryParam( "sha256" ) String sha256, @Context final UriInfo uriInfo )
     {
-        try
+        TrackedContentEntry contentEntry = new TrackedContentEntry( new TrackingKey( id ), new StoreKey( packageType,
+                                                                                                         StoreType.valueOf(
+                                                                                                                 type ),
+                                                                                                         name ),
+                                                                    AccessChannel.NATIVE, originalUrl, path,
+                                                                    StoreEffect.DOWNLOAD, size, md5, sha1, sha256 );
+        Boolean result = controller.recordArtifact( contentEntry );
+        if ( result )
         {
-            controller.recordArtifact( request.getInputStream() );
+            return Response.ok().build();
         }
-        catch ( IOException e )
-        {
-            responseHelper.throwError( new IndyWorkflowException( "IO error", e ) );
-        }
-
-        return Response.created( uriInfo.getRequestUri() ).build();
+        return Response.status( Response.Status.NOT_FOUND ).build();
     }
 
     @Operation( description = "Seal the tracking record for the specified key, to prevent further content logging" )

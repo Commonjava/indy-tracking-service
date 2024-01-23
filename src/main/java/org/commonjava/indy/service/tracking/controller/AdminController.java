@@ -345,26 +345,16 @@ public class AdminController
         return contentService.getZipRepository( dto );
     }
 
-    public boolean recordArtifact( InputStream stream )
+    public boolean recordArtifact( TrackedContentEntry contentEntry )
     {
-        TrackedContentEntry entry;
-        ObjectMapper mapper = new ObjectMapper();
         boolean isRecorded = false;
         try
         {
-            entry = mapper.readValue( stream, TrackedContentEntry.class );
-            if ( entry != null )
-            {
-                isRecorded = recordManager.recordArtifact( entry );
-            }
-        }
-        catch ( IOException e )
-        {
-            logger.error( String.format( "Failed to record tracked entry. Reason: %s", e.getMessage() ), e );
+            isRecorded = recordManager.recordArtifact( contentEntry );
         }
         catch ( final ContentException | IndyWorkflowException e )
         {
-            logger.error( "Failed to read TrackedContentEntry from event payload.", e );
+            logger.error( "Failed to read TrackedContentEntry.", e );
         }
         return isRecorded;
     }
