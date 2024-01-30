@@ -34,7 +34,7 @@ import javax.inject.Inject;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class FoloTrackingAdjustListener
 {
 
@@ -46,8 +46,8 @@ public class FoloTrackingAdjustListener
     @Inject
     private CassandraTrackingQuery recordManager;
 
-    @Blocking
-    @Incoming( "promote-event-in" )
+    //@Blocking
+    //@Incoming( "promote-event-in" )
     public CompletionStage<Void> onPromoteComplete( Message<PathsPromoteCompleteEvent> message )
     {
         PathsPromoteCompleteEvent event = message.getPayload();
