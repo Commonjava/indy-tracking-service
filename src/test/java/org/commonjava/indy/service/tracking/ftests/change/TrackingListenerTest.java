@@ -151,25 +151,5 @@ public class TrackingListenerTest
         TrackedContent content = trackingQuery.get( new TrackingKey( trackingId ) );
         assert content != null;
     }
-
-    //@Test
-    void TestOnPromoteComplete() throws InterruptedException
-    {
-        InMemorySource<PathsPromoteCompleteEvent> pathsPromoteCompleteEvents = connector.source( "promote-event-in" );
-        PathsPromoteCompleteEvent event = new PathsPromoteCompleteEvent();
-        Set<String> paths = new HashSet<>();
-        paths.add( "/path/to/file" );
-        event.setCompletedPaths( paths );
-        String trackingId = "abc124";
-        StoreKey sourceStore = new StoreKey( PackageTypeConstants.PKG_TYPE_MAVEN, StoreType.hosted, trackingId );
-        StoreKey targetStore = new StoreKey( PackageTypeConstants.PKG_TYPE_MAVEN, StoreType.remote, "new-test" );
-        event.setSourceStore( sourceStore.toString() );
-        event.setTargetStore( targetStore.toString() );
-        pathsPromoteCompleteEvents.send( event );
-        sleep( 10000 );
-        TrackedContent trackedContent = trackingQuery.get( new TrackingKey( trackingId ) );
-        assert trackedContent != null;
-        assert trackedContent.getUploads().size() == 2;
-    }
-
+    
 }
