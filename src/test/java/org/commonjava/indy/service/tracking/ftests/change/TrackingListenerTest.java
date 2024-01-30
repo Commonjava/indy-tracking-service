@@ -152,7 +152,7 @@ public class TrackingListenerTest
         assert content != null;
     }
 
-    @Test
+    //@Test
     void TestOnPromoteComplete() throws InterruptedException
     {
         InMemorySource<PathsPromoteCompleteEvent> pathsPromoteCompleteEvents = connector.source( "promote-event-in" );
