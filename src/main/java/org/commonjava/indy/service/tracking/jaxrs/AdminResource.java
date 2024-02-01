@@ -35,6 +35,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -70,6 +71,7 @@ import static org.commonjava.indy.service.tracking.Constants.LEGACY;
 import static org.commonjava.indy.service.tracking.Constants.TRACKING_TYPE.IN_PROGRESS;
 import static org.commonjava.indy.service.tracking.Constants.TRACKING_TYPE.SEALED;
 import static org.eclipse.microprofile.openapi.annotations.enums.ParameterIn.PATH;
+import static org.eclipse.microprofile.openapi.annotations.enums.ParameterIn.QUERY;
 
 @Tag( name = "Tracking Record Access", description = "Manages tracking records." )
 @Path( "/api/folo/admin" )
@@ -169,24 +171,36 @@ public class AdminResource
     }
 
     @Operation( description = "Get record for single tracking content artifact" )
+    @Parameters( value = {
+            @Parameter( name = "packageType", in = QUERY, description = "The package type of the repository.",
+                        example = "maven, npm, generic-http", required = true ),
+            @Parameter( name = "type", in = QUERY, description = "The type of the repository.",
+                        example = "group, remote, hosted", required = true ) } )
     @APIResponse( responseCode = "200", description = "Tracking record" )
     @APIResponse( responseCode = "404", description = "No such tracking record" )
     @Path( "/{id}/artifactRecord/{path: (.*)}" )
     @GET
-    public Response recordArtifact(
-            @Parameter( description = "User-assigned tracking session key", in = PATH, required = true )
-            @PathParam( "id" ) final String id, @PathParam( "path" ) String path,
-            @QueryParam( "packageType" ) String packageType, @QueryParam( "type" ) String type,
-            @QueryParam( "name" ) String name, @QueryParam( "originalUrl" ) String originalUrl,
-            @QueryParam( "size" ) long size, @QueryParam( "md5" ) String md5, @QueryParam( "sha1" ) String sha1,
-            @QueryParam( "sha256" ) String sha256, @Context final UriInfo uriInfo )
+    public Response recordArtifact( @Parameter( in = PATH, required = true ) @PathParam( "id" ) final String id,
+                                    @Parameter( in = PATH, required = true ) @PathParam( "path" ) String path,
+                                    @Parameter( in = QUERY, required = true ) @QueryParam( "packageType" )
+                                    String packageType,
+                                    @Parameter( in = QUERY, required = true ) @QueryParam( "type" ) String type,
+                                    @Parameter( in = QUERY, required = true ) @QueryParam( "name" ) String name,
+                                    @QueryParam( "originalUrl" ) String originalUrl, @QueryParam( "size" ) long size,
+                                    @QueryParam( "md5" ) String md5, @QueryParam( "sha1" ) String sha1,
+                                    @QueryParam( "sha256" ) String sha256, @Context final UriInfo uriInfo )
     {
-        TrackedContentEntry contentEntry = new TrackedContentEntry( new TrackingKey( id ), new StoreKey( packageType,
-                                                                                                         StoreType.valueOf(
-                                                                                                                 type ),
-                                                                                                         name ),
-                                                                    AccessChannel.NATIVE, originalUrl, path,
-                                                                    StoreEffect.DOWNLOAD, size, md5, sha1, sha256 );
+        final StoreType st = StoreType.get( type );
+        if ( null == packageType || null == type || null == st )
+        {
+            logger.error( "Unsupported package type: {} or unsupported repo type: {} for path: {}, tracking id: {}.",
+                          packageType, type, path, id );
+            return Response.status( Response.Status.NOT_FOUND ).build();
+        }
+        TrackedContentEntry contentEntry =
+                new TrackedContentEntry( new TrackingKey( id ), new StoreKey( packageType, st, name ),
+                                         AccessChannel.NATIVE, originalUrl, path, StoreEffect.DOWNLOAD, size, md5, sha1,
+                                         sha256 );
         Boolean result = controller.recordArtifact( contentEntry );
         if ( result )
         {
