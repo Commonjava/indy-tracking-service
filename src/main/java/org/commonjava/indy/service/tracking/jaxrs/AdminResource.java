@@ -204,6 +204,7 @@ public class AdminResource
         Boolean result = controller.recordArtifact( contentEntry );
         if ( result )
         {
+            logger.debug( "Done for path {}, id {} artifact record.", path, id );
             return Response.ok().build();
         }
         return Response.status( Response.Status.NOT_FOUND ).build();
