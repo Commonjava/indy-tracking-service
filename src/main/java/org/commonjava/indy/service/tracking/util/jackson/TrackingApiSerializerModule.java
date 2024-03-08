@@ -18,7 +18,7 @@ package org.commonjava.indy.service.tracking.util.jackson;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.commonjava.indy.service.tracking.model.StoreKey;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class TrackingApiSerializerModule

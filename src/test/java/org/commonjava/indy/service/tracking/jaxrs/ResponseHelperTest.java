@@ -35,7 +35,7 @@ import org.commonjava.indy.service.tracking.model.dto.TrackedContentEntryDTO;
 import org.commonjava.indy.service.tracking.model.dto.TrackingIdsDTO;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

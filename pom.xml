@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.commonjava</groupId>
         <artifactId>service-parent</artifactId>
-        <version>2</version>
+        <version>5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.commonjava.indy.service</groupId>
@@ -41,17 +41,11 @@
     <properties>
         <apiVersion>1</apiVersion>
         <projectEmail>https://github.com/Commonjava/indy-tracking-service</projectEmail>
-
         <atlas.version>1.1.1</atlas.version>
         <eventmodel.version>1.5</eventmodel.version>
         <indysecurity.verison>1.0</indysecurity.verison>
-
         <cassandra.version>3.11.3</cassandra.version>
         <agroal.version>2.0</agroal.version>
-
-        <!--
-        <honeycomb.otel.version>1.0.0</honeycomb.otel.version>
-        -->
     </properties>
 
     <dependencies>
@@ -286,26 +280,6 @@
             <version>1.26</version>
         </dependency>
         <dependency>
-            <groupId>org.cassandraunit</groupId>
-            <artifactId>cassandra-unit</artifactId>
-            <version>3.11.2.0</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport-native-epoll</artifactId>
             <classifier>linux-x86_64</classifier>
@@ -334,7 +308,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>io.quarkus</groupId>
+                <groupId>io.quarkus.platform</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
             </plugin>
             <plugin>

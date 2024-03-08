@@ -21,7 +21,7 @@ import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
 import org.commonjava.indy.service.tracking.client.content.MaintenanceService;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 @Mock
 @RestClient

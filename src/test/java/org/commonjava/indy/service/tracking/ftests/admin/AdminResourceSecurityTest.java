@@ -25,7 +25,7 @@ import org.commonjava.indy.service.tracking.model.StoreType;
 import org.commonjava.indy.service.tracking.profile.SecuredFunctionProfile;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static io.restassured.RestAssured.given;
 

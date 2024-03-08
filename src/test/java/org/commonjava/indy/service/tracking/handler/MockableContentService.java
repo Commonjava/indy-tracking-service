@@ -29,8 +29,8 @@ import org.commonjava.indy.service.tracking.model.dto.ContentTransferDTO;
 import org.commonjava.indy.service.tracking.model.pkg.PackageTypeConstants;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;

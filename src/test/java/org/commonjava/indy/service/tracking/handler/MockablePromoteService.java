@@ -22,15 +22,15 @@ import org.commonjava.indy.service.tracking.jaxrs.DTOStreamingOutput;
 import org.commonjava.indy.service.tracking.jaxrs.ResponseHelper;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Mock
 @RestClient
