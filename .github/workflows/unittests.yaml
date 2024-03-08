@@ -44,6 +44,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: maven-settings-xml-action
+        uses: whelk-io/maven-settings-xml-action@v14
+        with:
+          repositories: '[{ "id": "sonatype", "url": "https://oss.sonatype.org/content/repositories/snapshots/", "releases": {"enabled": "false"}, "snapshots": {"enabled": "true" }}]'
+
       - name: 🚀 Jacoco Coverage Report for JDK ${{ matrix.jdk-version }}
         run:  mvn clean test jacoco:report --no-transfer-progress
 
