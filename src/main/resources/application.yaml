@@ -84,3 +84,5 @@ quarkus:
     pass: cassandra
     keyspace: folo
     keyspaceReplicas: 1
+  indy_security:
+    enabled: false
