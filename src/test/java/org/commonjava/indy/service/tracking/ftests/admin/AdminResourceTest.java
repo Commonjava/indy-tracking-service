@@ -71,7 +71,7 @@ public class AdminResourceTest
     @BeforeAll
     public static void init()
     {
-        cassandraContainer = (CassandraContainer) ( new CassandraContainer() );
+        cassandraContainer = new CassandraContainer( "cassandra:3.11.10" );
         String initScript = "folo_init_script.cql";
         URL resource = Thread.currentThread().getContextClassLoader().getResource( initScript );
         if ( resource != null )

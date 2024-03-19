@@ -68,6 +68,8 @@ quarkus:
           level: DEBUG
       console:
         enable: true
+    oidc:
+      enabled: false
   tracking:
     content-service:
       url: "http://localhost:8081/api"

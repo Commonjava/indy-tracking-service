@@ -72,7 +72,7 @@ public class ResponseHelper
 
     public void throwError( final Throwable error )
     {
-        formulateResponse( null, error, null, true, null );
+        formulateResponse( 0, error, null, true, null );
     }
 
     private Response formulateResponse( final Status status, final Throwable error, final String message,
