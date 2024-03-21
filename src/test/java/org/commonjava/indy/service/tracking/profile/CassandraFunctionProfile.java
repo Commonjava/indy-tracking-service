@@ -15,7 +15,7 @@
  */
 package org.commonjava.indy.service.tracking.profile;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 public class CassandraFunctionProfile
@@ -26,9 +26,7 @@ public class CassandraFunctionProfile
     @Override
     Map<String, String> getExtraConfigOverrides()
     {
-        Map<String, String> config = new HashMap<>();
-        config.put( "cassandra.port", "9142" );
-        return config;
+        return Collections.emptyMap();
     }
 
 }
