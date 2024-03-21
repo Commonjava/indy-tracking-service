@@ -49,6 +49,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.lang.Thread.sleep;
+import static org.commonjava.indy.service.tracking.profile.CassandraFunctionProfile.CASSANDRA_CONTAINER_IMAGE;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
@@ -71,7 +72,7 @@ public class TrackingListenerTest
     @BeforeAll
     public static void init()
     {
-        cassandraContainer = (CassandraContainer) ( new CassandraContainer() );
+        cassandraContainer = new CassandraContainer( CASSANDRA_CONTAINER_IMAGE );
         String initScript = "folo_init_script.cql";
         URL resource = Thread.currentThread().getContextClassLoader().getResource( initScript );
         if ( resource != null )

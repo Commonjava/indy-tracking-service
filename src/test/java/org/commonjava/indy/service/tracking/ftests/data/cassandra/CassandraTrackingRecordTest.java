@@ -35,6 +35,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.commonjava.indy.service.tracking.profile.CassandraFunctionProfile.CASSANDRA_CONTAINER_IMAGE;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
@@ -52,7 +53,7 @@ public class CassandraTrackingRecordTest
     @BeforeEach
     public void start() throws Exception
     {
-        this.cassandraContainer = (CassandraContainer) ( new CassandraContainer() );
+        this.cassandraContainer = new CassandraContainer( CASSANDRA_CONTAINER_IMAGE );
         String initScript = "cassandra_init_script.cql";
         URL resource = Thread.currentThread().getContextClassLoader().getResource( initScript );
         if ( resource != null )

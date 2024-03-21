@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static io.restassured.RestAssured.given;
+import static org.commonjava.indy.service.tracking.profile.CassandraFunctionProfile.CASSANDRA_CONTAINER_IMAGE;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
@@ -71,7 +72,7 @@ public class AdminResourceTest
     @BeforeAll
     public static void init()
     {
-        cassandraContainer = new CassandraContainer( "cassandra:3.11.10" );
+        cassandraContainer = new CassandraContainer( CASSANDRA_CONTAINER_IMAGE );
         String initScript = "folo_init_script.cql";
         URL resource = Thread.currentThread().getContextClassLoader().getResource( initScript );
         if ( resource != null )

@@ -21,6 +21,8 @@ import java.util.Map;
 public class CassandraFunctionProfile
                 extends BaseIndyTestProfile
 {
+    public final static String CASSANDRA_CONTAINER_IMAGE = "cassandra:3.11.10";
+
     @Override
     Map<String, String> getExtraConfigOverrides()
     {
