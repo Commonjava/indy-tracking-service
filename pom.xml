@@ -45,7 +45,6 @@
         <eventmodel.version>1.5</eventmodel.version>
         <indysecurity.verison>1.2-SNAPSHOT</indysecurity.verison>
         <cassandra.version>3.11.3</cassandra.version>
-        <agroal.version>2.0</agroal.version>
     </properties>
 
     <dependencies>
@@ -115,6 +114,7 @@
             <artifactId>quarkus-oidc</artifactId>
         </dependency>
 
+        <!-- quarkus test deps -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
@@ -160,7 +160,7 @@
             <artifactId>awaitility</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- quarkus deps end -->
+
         <!-- quarkus otel deps -->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -182,15 +182,7 @@
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-sdk-extension-jaeger-remote-sampler</artifactId>
         </dependency>
-        <!-- for honeycomb otel usage, see: https://docs.honeycomb.io/getting-data-in/opentelemetry/java-distro/ -->
-        <!--
-        <dependency>
-          <groupId>io.honeycomb</groupId>
-          <artifactId>honeycomb-opentelemetry-sdk</artifactId>
-          <version>${honeycomb.otel.version}</version>
-        </dependency>
-        -->
-        <!-- quarkus otel deps end -->
+
         <!-- for access other services -->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -215,11 +207,6 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-            <version>2.0.2.Final</version>
-        </dependency>
-        <dependency>
             <groupId>org.commonjava.atlas</groupId>
             <artifactId>atlas-relationships-api</artifactId>
             <version>${atlas.version}</version>
@@ -235,14 +222,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.5.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
         </dependency>
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
@@ -257,28 +238,15 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-interpolation</artifactId>
-            <version>1.26</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport-native-epoll</artifactId>
             <classifier>linux-x86_64</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.commonjava.util</groupId>
-            <artifactId>http-testserver-core</artifactId>
-            <version>2.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
