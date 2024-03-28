@@ -42,7 +42,7 @@
         <apiVersion>1</apiVersion>
         <projectEmail>https://github.com/Commonjava/indy-tracking-service</projectEmail>
         <atlas.version>1.1.1</atlas.version>
-        <eventmodel.version>1.5</eventmodel.version>
+        <eventmodel.version>2.0</eventmodel.version>
         <cassandra.version>3.11.3</cassandra.version>
     </properties>
 
