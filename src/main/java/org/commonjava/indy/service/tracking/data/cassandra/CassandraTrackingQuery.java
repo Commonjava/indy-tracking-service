@@ -22,6 +22,7 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import io.quarkus.runtime.Startup;
 import org.commonjava.indy.service.tracking.exception.ContentException;
 import org.commonjava.indy.service.tracking.exception.IndyLifecycleException;
 import org.commonjava.indy.service.tracking.exception.IndyWorkflowException;
@@ -45,6 +46,7 @@ import static org.commonjava.indy.service.tracking.data.cassandra.CassandraFoloU
 import static org.commonjava.indy.service.tracking.data.cassandra.CassandraFoloUtil.TABLE_FOLO_LEGACY;
 import static org.commonjava.indy.service.tracking.data.cassandra.DtxTrackingRecord.fromCassandraRow;
 
+@Startup
 @ApplicationScoped
 public class CassandraTrackingQuery
 {
