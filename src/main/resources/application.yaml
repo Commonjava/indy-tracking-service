@@ -14,6 +14,14 @@ quarkus:
       verification: none
     token:
       issuer: any
+  oidc-client:
+    auth-server-url: "keycloak_server_url/realms/your_realm"
+    client-id: your_client_id
+    credentials:
+      secret: your_secret
+    refresh-token-time-skew: 60
+    early-tokens-acquisition: false
+
 "%dev":
   quarkus:
     kubernetes-config:

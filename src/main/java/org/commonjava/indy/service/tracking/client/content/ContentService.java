@@ -15,7 +15,7 @@
  */
 package org.commonjava.indy.service.tracking.client.content;
 
-import org.commonjava.indy.service.tracking.client.CustomClientRequestFilter;
+import org.commonjava.indy.service.security.jaxrs.CustomClientRequestFilter;
 import org.commonjava.indy.service.tracking.model.dto.ContentDTO;
 import org.commonjava.indy.service.tracking.model.dto.ContentTransferDTO;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;

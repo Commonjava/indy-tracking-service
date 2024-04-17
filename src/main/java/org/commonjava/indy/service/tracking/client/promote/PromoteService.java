@@ -15,7 +15,7 @@
  */
 package org.commonjava.indy.service.tracking.client.promote;
 
-import org.commonjava.indy.service.tracking.client.CustomClientRequestFilter;
+import org.commonjava.indy.service.security.jaxrs.CustomClientRequestFilter;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
