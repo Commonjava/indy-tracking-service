@@ -31,7 +31,7 @@ import java.util.Set;
 
 import static org.commonjava.indy.service.tracking.data.cassandra.CassandraFoloUtil.TABLE_FOLO;
 
-@Table( name = TABLE_FOLO )
+@Table( name = TABLE_FOLO, readConsistency = "QUORUM", writeConsistency = "QUORUM" )
 public class DtxTrackingRecord
 {
 

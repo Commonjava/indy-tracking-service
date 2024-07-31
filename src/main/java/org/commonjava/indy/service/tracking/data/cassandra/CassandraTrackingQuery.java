@@ -15,11 +15,7 @@
  */
 package org.commonjava.indy.service.tracking.data.cassandra;
 
-import com.datastax.driver.core.BoundStatement;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.*;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import org.commonjava.indy.service.tracking.exception.ContentException;
@@ -41,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.datastax.driver.core.ConsistencyLevel.QUORUM;
 import static org.commonjava.indy.service.tracking.data.cassandra.CassandraFoloUtil.TABLE_FOLO;
 import static org.commonjava.indy.service.tracking.data.cassandra.CassandraFoloUtil.TABLE_FOLO_LEGACY;
 import static org.commonjava.indy.service.tracking.data.cassandra.DtxTrackingRecord.fromCassandraRow;
@@ -107,23 +104,28 @@ public class CassandraTrackingQuery
 
         getTrackingRecord = session.prepare( "SELECT * FROM " + keySpace + "." + TABLE_FOLO
                                                              + " WHERE tracking_key=? AND store_key=? AND path=? AND store_effect=?;" );
+        getTrackingRecord.setConsistencyLevel( QUORUM );
 
         getTrackingKeys = session.prepare( "SELECT distinct tracking_key FROM " + keySpace + "." + TABLE_FOLO + ";" );
+        getTrackingKeys.setConsistencyLevel( QUORUM );
 
         getLegacyTrackingKeys = session.prepare(
                         "SELECT distinct tracking_key FROM " + keySpace + "." + TABLE_FOLO_LEGACY + ";" );
 
         getTrackingRecordsByTrackingKey =
                         session.prepare( "SELECT * FROM " + keySpace + "." + TABLE_FOLO + " WHERE tracking_key=?;" );
+        getTrackingRecordsByTrackingKey.setConsistencyLevel( QUORUM );
 
         getLegacyTrackingRecordsByTrackingKey = session.prepare(
                         "SELECT * FROM " + keySpace + "." + TABLE_FOLO_LEGACY + " WHERE tracking_key=?;" );
+        getLegacyTrackingRecordsByTrackingKey.setConsistencyLevel( QUORUM );
 
         isTrackingRecordExist = session.prepare(
                         "SELECT count(*) FROM " + keySpace + "." + TABLE_FOLO + " WHERE tracking_key=?;" );
 
         deleteTrackingRecordsByTrackingKey =
                         session.prepare( "DELETE FROM " + keySpace + "." + TABLE_FOLO + " WHERE tracking_key=?;" );
+        deleteTrackingRecordsByTrackingKey.setConsistencyLevel( QUORUM );
 
         logger.info( "-- Cassandra Folo Records Keyspace and Tables created" );
     }
