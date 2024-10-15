@@ -16,10 +16,10 @@
 package org.commonjava.indy.service.tracking.data.cassandra;
 
 import io.quarkus.runtime.Startup;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import java.util.Optional;
 
 import static java.util.Optional.of;
@@ -64,6 +64,10 @@ public class CassandraConfiguration
     @Inject
     @ConfigProperty( name = "cassandra.retries.write", defaultValue = "3" )
     int writeRetries;
+
+    @Inject
+    @ConfigProperty( name = "cassandra.reconnect.delay", defaultValue = "60000" )
+    long constantDelayMs;
 
     @Inject
     @ConfigProperty( name = "cassandra.keyspace" )
@@ -165,6 +169,16 @@ public class CassandraConfiguration
     public void setWriteRetries( int writeRetries )
     {
         this.writeRetries = writeRetries;
+    }
+
+    public long getConstantDelayMs()
+    {
+        return constantDelayMs;
+    }
+
+    public void setConstantDelayMs( long constantDelayMs )
+    {
+        this.constantDelayMs = constantDelayMs;
     }
 
     public String getKeyspace()
