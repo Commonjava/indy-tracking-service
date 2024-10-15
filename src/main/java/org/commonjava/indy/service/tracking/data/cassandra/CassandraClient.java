@@ -18,12 +18,13 @@ package org.commonjava.indy.service.tracking.data.cassandra;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.SocketOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -75,6 +76,8 @@ public class CassandraClient
         socketOptions.setReadTimeoutMillis( config.getReadTimeoutMillis() );
         Cluster.Builder builder = Cluster.builder()
                                          .withoutJMXReporting()
+                                         .withReconnectionPolicy(
+                                                 new ConstantReconnectionPolicy( config.getConstantDelayMs() ) )
                                          .withRetryPolicy( new ConfigurableRetryPolicy( config.getReadRetries(),
                                                                                         config.getWriteRetries() ) )
                                          .addContactPoint( host )
