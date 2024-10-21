@@ -16,6 +16,7 @@
 package org.commonjava.indy.service.tracking.data.cassandra;
 
 import com.datastax.driver.core.*;
+import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import org.commonjava.indy.service.tracking.exception.ContentException;
@@ -130,6 +131,37 @@ public class CassandraTrackingQuery
         logger.info( "-- Cassandra Folo Records Keyspace and Tables created" );
     }
 
+    private ResultSet executeSession ( BoundStatement bind )
+    {
+        boolean exception = false;
+        ResultSet trackingRecord = null;
+        try
+        {
+            if ( session == null )
+            {
+                client.close();
+                client.init();
+                this.init();
+            }
+            trackingRecord = session.execute( bind );
+        }
+        catch ( NoHostAvailableException e )
+        {
+            exception = true;
+            logger.error( "Cannot connect to host, reconnect once more with new session.", e );
+        }
+        finally
+        {
+            if ( exception )
+            {
+                client.close();
+                client.init();
+                this.init();
+                trackingRecord = session.execute( bind );
+            }
+        }
+        return trackingRecord;
+    }
     public boolean recordArtifact( TrackedContentEntry entry ) throws ContentException, IndyWorkflowException
     {
 
@@ -139,7 +171,7 @@ public class CassandraTrackingQuery
         String effect = entry.getEffect().toString();
 
         BoundStatement bind = getTrackingRecord.bind( buildId, storeKey, path, effect );
-        ResultSet trackingRecord = session.execute( bind );
+        ResultSet trackingRecord = executeSession( bind );
         Row one = trackingRecord.one();
 
         if ( one != null )
@@ -161,7 +193,7 @@ public class CassandraTrackingQuery
     {
         logger.info( "Delete tracking records, tracking_id: {}", key.getId() );
         BoundStatement bind = deleteTrackingRecordsByTrackingKey.bind( key.getId() );
-        session.execute( bind );
+        executeSession( bind );
     }
 
     public void replaceTrackingRecord( TrackedContent record )
@@ -172,7 +204,7 @@ public class CassandraTrackingQuery
     public boolean hasRecord( TrackingKey key )
     {
         BoundStatement bind = isTrackingRecordExist.bind( key );
-        ResultSet result = session.execute( bind );
+        ResultSet result = executeSession( bind );
         Row row = result.one();
         boolean exists = false;
         if ( row != null )
@@ -303,7 +335,7 @@ public class CassandraTrackingQuery
     private List<DtxTrackingRecord> getLegacyDtxTrackingRecordsFromDb( TrackingKey trackingKey )
     {
         BoundStatement bind = getLegacyTrackingRecordsByTrackingKey.bind( trackingKey.getId() );
-        ResultSet execute = session.execute( bind );
+        ResultSet execute = executeSession( bind );
         List<Row> rows = execute.all();
         return fetchRecordsFromRows( rows );
     }
@@ -311,7 +343,7 @@ public class CassandraTrackingQuery
     private List<DtxTrackingRecord> getDtxTrackingRecordsFromDb( TrackingKey trackingKey )
     {
         BoundStatement bind = getTrackingRecordsByTrackingKey.bind( trackingKey.getId() );
-        ResultSet execute = session.execute( bind );
+        ResultSet execute = executeSession( bind );
         List<Row> rows = execute.all();
         return fetchRecordsFromRows( rows );
     }
@@ -385,7 +417,7 @@ public class CassandraTrackingQuery
 
     private Set<TrackingKey> getTrackingKeys( BoundStatement statement )
     {
-        ResultSet resultSet = session.execute( statement );
+        ResultSet resultSet = executeSession( statement );
         List<Row> all = resultSet.all();
         Iterator<Row> iterator = all.iterator();
 
