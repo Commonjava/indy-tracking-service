@@ -137,7 +137,7 @@ public class CassandraTrackingQuery
         ResultSet trackingRecord = null;
         try
         {
-            if ( session == null )
+            if ( session == null || session.isClosed() )
             {
                 client.close();
                 client.init();
