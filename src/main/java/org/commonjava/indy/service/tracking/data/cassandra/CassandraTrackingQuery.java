@@ -131,37 +131,6 @@ public class CassandraTrackingQuery
         logger.info( "-- Cassandra Folo Records Keyspace and Tables created" );
     }
 
-    private ResultSet executeSession ( BoundStatement bind )
-    {
-        boolean exception = false;
-        ResultSet trackingRecord = null;
-        try
-        {
-            if ( session == null || session.isClosed() )
-            {
-                client.close();
-                client.init();
-                this.init();
-            }
-            trackingRecord = session.execute( bind );
-        }
-        catch ( NoHostAvailableException e )
-        {
-            exception = true;
-            logger.error( "Cannot connect to host, reconnect once more with new session.", e );
-        }
-        finally
-        {
-            if ( exception )
-            {
-                client.close();
-                client.init();
-                this.init();
-                trackingRecord = session.execute( bind );
-            }
-        }
-        return trackingRecord;
-    }
     public boolean recordArtifact( TrackedContentEntry entry ) throws ContentException, IndyWorkflowException
     {
 
@@ -434,6 +403,38 @@ public class CassandraTrackingQuery
     public void createDtxTrackingRecord( DtxTrackingRecord trackingRecord )
     {
         trackingMapper.save( trackingRecord );
+    }
+
+    private ResultSet executeSession ( BoundStatement bind )
+    {
+        boolean exception = false;
+        ResultSet trackingRecord = null;
+        try
+        {
+            if ( session == null || session.isClosed() )
+            {
+                client.close();
+                client.init();
+                this.init();
+            }
+            trackingRecord = session.execute( bind );
+        }
+        catch ( NoHostAvailableException e )
+        {
+            exception = true;
+            logger.error( "Cannot connect to host, reconnect once more with new session.", e );
+        }
+        finally
+        {
+            if ( exception )
+            {
+                client.close();
+                client.init();
+                this.init();
+                trackingRecord = session.execute( bind );
+            }
+        }
+        return trackingRecord;
     }
 
 }
