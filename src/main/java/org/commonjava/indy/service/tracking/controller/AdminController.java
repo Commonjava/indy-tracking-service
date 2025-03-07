@@ -354,7 +354,7 @@ public class AdminController
         }
         catch ( final ContentException | IndyWorkflowException e )
         {
-            logger.error( "Failed to read TrackedContentEntry.", e );
+            logger.error( "Failed to record entry: {}.", contentEntry, e );
         }
         return isRecorded;
     }
