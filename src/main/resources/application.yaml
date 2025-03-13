@@ -96,3 +96,6 @@ quarkus:
     keyspaceReplicas: 1
   indy_security:
     enabled: false
+  kafka:
+    bootstrap:
+      servers: "localhost:9092"
