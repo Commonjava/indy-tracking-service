@@ -383,6 +383,7 @@ public class AdminResource
     @Produces( APPLICATION_JSON )
     public Response doDelete( @Context final UriInfo uriInfo, final BatchDeleteRequest request )
     {
+        logger.info( "Batch delete request: {}", request );
         String trackingID = request.getTrackingID();
 
         if ( trackingID == null || request.getStoreKey() == null )
@@ -414,6 +415,7 @@ public class AdminResource
                 {
                     paths.add( entry.getPath() );
                 }
+                logger.info( "Set batch delete paths: {}", paths );
                 request.setPaths( paths );
             }
             catch ( IndyWorkflowException e )
