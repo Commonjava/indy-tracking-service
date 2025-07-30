@@ -58,6 +58,8 @@ import java.util.stream.Collectors;
 
 import static org.commonjava.indy.service.tracking.util.TrackingUtils.readZipInputStreamAnd;
 import static org.commonjava.indy.service.tracking.util.TrackingUtils.zipTrackedContent;
+import org.commonjava.indy.service.tracking.client.storage.StorageBatchDeleteRequest;
+import org.commonjava.indy.service.tracking.client.storage.StorageService;
 
 @ApplicationScoped
 public class AdminController
@@ -75,6 +77,10 @@ public class AdminController
     @Inject
     @RestClient
     PromoteService promoteService;
+
+    @Inject
+    @RestClient
+    StorageService storageService;
 
     @Inject
     private IndyTrackingConfiguration config;
@@ -408,6 +414,42 @@ public class AdminController
         }
         logger.info("Deletion guard check, trackingID: {}, passed: {}", trackingID, isOk.get());
         return isOk.get();
+    }
+
+    /**
+     * Post-action after successful batch delete: cleans up empty parent folders.
+     * <p>
+     * For each deleted path, collects its immediate parent folder (one level up).
+     * Then calls the storage service to clean up these folders, relying on the
+     * storage API to handle ancestor folders as needed.
+     * </p>
+     *
+     * @param filesystem the target filesystem/storeKey as a string
+     * @param paths the set of deleted file paths
+     */
+    public void cleanupEmptyFolders(String filesystem, Set<String> paths) {
+        logger.info("Post-action: cleanupEmptyFolder, filesystem={}, paths={}", filesystem, paths);
+        if (paths == null || paths.isEmpty()) {
+            logger.info("No paths to process for cleanup.");
+            return;
+        }
+        Set<String> folders = new HashSet<>();
+        for (String path : paths) {
+            int idx = path.lastIndexOf('/');
+            if (idx > 0) {
+                String folder = path.substring(0, idx);
+                folders.add(folder);
+            }
+        }
+        StorageBatchDeleteRequest req = new StorageBatchDeleteRequest();
+        req.setFilesystem(filesystem);
+        req.setPaths(folders);
+        try {
+            Response resp = storageService.cleanupEmptyFolders(req);
+            logger.info("Cleanup empty folders, req: {}, status {}", req, resp.getStatus());
+        } catch (Exception e) {
+            logger.warn("Failed to cleanup folders, request: {}, error: {}", req, e.getMessage(), e);
+        }
     }
 
     private boolean isSuccess(Response resp) {
