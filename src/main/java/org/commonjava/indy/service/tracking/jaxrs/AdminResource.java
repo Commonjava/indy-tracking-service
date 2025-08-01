@@ -63,6 +63,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import static java.util.Collections.emptySet;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -94,6 +96,10 @@ public class AdminResource
 
     @Inject
     private IndyTrackingConfiguration config;
+
+    // Inject a managed Executor for running async post-actions without blocking the main thread
+    @Inject
+    Executor executor;
 
     public AdminResource()
     {
@@ -424,7 +430,12 @@ public class AdminResource
             }
         }
 
-        return maintenanceService.doDelete( request );
+        Response response = maintenanceService.doDelete( request );
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            // Run the cleanupEmptyFolder post-action asynchronously
+            CompletableFuture.runAsync(() -> controller.cleanupEmptyFolders(
+                request.getStoreKey().toString(), request.getPaths()), executor);
+        }
+        return response;
     }
-
 }
