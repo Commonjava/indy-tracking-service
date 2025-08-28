@@ -25,7 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.commonjava.indy.service</groupId>
     <artifactId>indy-tracking-service</artifactId>
-    <version>2.3</version>
+    <version>2.4-SNAPSHOT</version>
     <name>Indy :: Service :: Tracking</name>
     <url>https://github.com/Commonjava/indy-tracking-service</url>
     <description>Indy Tracking Service</description>
@@ -35,7 +35,7 @@
         <connection>scm:git:https://github.com/commonjava/indy-tracking-service</connection>
         <developerConnection>scm:git:https://github.com/commonjava/indy-tracking-service</developerConnection>
         <url>http://github.com/Commonjava/indy-tracking-service</url>
-        <tag>indy-tracking-service-2.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
