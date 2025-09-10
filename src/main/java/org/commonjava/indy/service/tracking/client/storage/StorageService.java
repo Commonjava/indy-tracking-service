@@ -15,11 +15,11 @@
  */
 package org.commonjava.indy.service.tracking.client.storage;
 
+import jakarta.ws.rs.POST;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.commonjava.indy.service.security.jaxrs.CustomClientRequestFilter;
 
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.Consumes;
@@ -32,7 +32,7 @@ public interface StorageService {
     /**
      * Delete empty folders by Storage BatchDeleteRequest as JSON body.
      */
-    @DELETE
+    @POST
     @Path("/maint/folders/empty")
     @Consumes(APPLICATION_JSON)
     Response cleanupEmptyFolders(StorageBatchDeleteRequest request);

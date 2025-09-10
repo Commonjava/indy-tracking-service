@@ -15,7 +15,6 @@
  */
 package org.commonjava.indy.service.tracking.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.commonjava.indy.service.tracking.Constants;
 import org.commonjava.indy.service.tracking.client.content.BatchDeleteRequest;
 import org.commonjava.indy.service.tracking.client.content.ContentService;
@@ -424,11 +423,14 @@ public class AdminController
      * storage API to handle ancestor folders as needed.
      * </p>
      *
+     * @param trackingID
      * @param filesystem the target filesystem/storeKey as a string
      * @param paths the set of deleted file paths
      */
-    public void cleanupEmptyFolders(String filesystem, Set<String> paths) {
-        logger.info("Post-action: cleanupEmptyFolder, filesystem={}, paths={}", filesystem, paths);
+    public void cleanupEmptyFolders( String trackingID, String filesystem, Set<String> paths )
+    {
+        logger.info("Post-action: cleanupEmptyFolder, trackingID={}, filesystem={}, paths={}",
+                    trackingID, filesystem, paths);
         if (paths == null || paths.isEmpty()) {
             logger.info("No paths to process for cleanup.");
             return;
@@ -442,11 +444,12 @@ public class AdminController
             }
         }
         StorageBatchDeleteRequest req = new StorageBatchDeleteRequest();
+        req.setInternalId( trackingID );
         req.setFilesystem(filesystem);
         req.setPaths(folders);
         try {
             Response resp = storageService.cleanupEmptyFolders(req);
-            logger.info("Cleanup empty folders, req: {}, status {}", req, resp.getStatus());
+            logger.info("Cleanup empty folders done, req: {}, status {}", req, resp.getStatus());
         } catch (Exception e) {
             logger.warn("Failed to cleanup folders, request: {}, error: {}", req, e.getMessage(), e);
         }

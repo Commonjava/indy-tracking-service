@@ -20,7 +20,10 @@ import java.util.Set;
 /**
  * Delete multiple paths in one filesystem.
  */
-public class StorageBatchDeleteRequest {
+public class StorageBatchDeleteRequest
+{
+    private String internalId;
+
     private Set<String> paths;
 
     private String filesystem;
@@ -41,11 +44,20 @@ public class StorageBatchDeleteRequest {
         this.filesystem = filesystem;
     }
 
+    public String getInternalId()
+    {
+        return internalId;
+    }
+
+    public void setInternalId( String internalId )
+    {
+        this.internalId = internalId;
+    }
+
     @Override
-    public String toString() {
-        return "BatchDeleteRequest{" +
-                "paths=" + paths +
-                ", filesystem='" + filesystem + '\'' +
-                '}';
+    public String toString()
+    {
+        return "StorageBatchDeleteRequest{" + "internalId='" + internalId + '\'' + ", paths=" + paths + ", filesystem='"
+                        + filesystem + '\'' + '}';
     }
 }
