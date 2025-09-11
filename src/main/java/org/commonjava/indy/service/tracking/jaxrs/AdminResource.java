@@ -433,7 +433,7 @@ public class AdminResource
         Response response = maintenanceService.doDelete( request );
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             // Run the cleanupEmptyFolder post-action asynchronously
-            CompletableFuture.runAsync(() -> controller.cleanupEmptyFolders(
+            CompletableFuture.runAsync(() -> controller.cleanupEmptyFolders( request.getTrackingID(),
                 request.getStoreKey().toString(), request.getPaths()), executor);
         }
         return response;
