@@ -22,7 +22,6 @@ on:
   push:
     branches:
       - main
-      - release_*
 
 jobs:
   test:
@@ -32,20 +31,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk-version: [ "11", "19" ]
+        jdk-version: [ "17", "21" ]
 
     steps:
       - name: 🧺 Checkout Repository Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: 🛠 Set up JDK ${{ matrix.jdk-version }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.jdk-version }}
           distribution: 'temurin'
           cache: maven
 
       - name: maven-settings-xml-action
-        uses: whelk-io/maven-settings-xml-action@v14
+        uses: whelk-io/maven-settings-xml-action@v22
         with:
           repositories: '[{ "id": "sonatype", "url": "https://oss.sonatype.org/content/repositories/snapshots/", "releases": {"enabled": "false"}, "snapshots": {"enabled": "true" }}]'
 
