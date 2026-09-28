@@ -21,6 +21,11 @@ quarkus:
       secret: your_secret
     refresh-token-time-skew: 60
     early-tokens-acquisition: false
+  rest-client:
+    # disable the default mapper so that the object still returns the Response object
+    # when a 404 is thrown
+    promote-service-api:
+      disable-default-mapper: true
 
 "%dev":
   quarkus:
